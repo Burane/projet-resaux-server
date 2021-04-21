@@ -39,7 +39,7 @@ public class Serv implements Runnable {
 
 				System.out
 						.println("Connexion avec : " + client.getInetAddress() + " sur le port : " + client.getPort());
-				Thread t = new Thread(new ThreadServ(client));
+				Thread t = new Thread(new Client(client));
 				t.start();
 
 			} catch (IOException e) {

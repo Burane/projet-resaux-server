@@ -16,9 +16,13 @@ dependencies {
 }
 
 tasks.withType(JavaExec) {
-    systemProperty "test", "myvariable"
+    String jdbc = "jdbc:mysql://"
+    String hostname = "burane.fr:"
+    String dbname = "ProjetReseauCnam"
+    String dbport = "3306/"
     systemProperty "database.user", credentials.dbUser
     systemProperty "database.password", credentials.dbPassword
+    systemProperty "database.url", jdbc + hostname + dbport + dbname
 }
 
 

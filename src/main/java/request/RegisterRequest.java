@@ -1,6 +1,12 @@
 package request;
 
-public class RegisterRequest extends GenericRequest implements GenericRequestInterface{
+import BDDconnection.BDDConnection;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class RegisterRequest extends GenericRequest implements GenericRequestInterface {
 	public String username;
 	public String password;
 
@@ -12,6 +18,23 @@ public class RegisterRequest extends GenericRequest implements GenericRequestInt
 
 	@Override
 	public String toString() {
-		return "RegisterRequest{" +  "username='" + username + '\'' + ", password='" + password + '\'' + '}';
+		return "RegisterRequest{" + "username='" + username + '\'' + ", password='" + password + '\'' + '}';
 	}
+
+	@Override
+	public void handle() {
+		Connection conn = BDDConnection.getConnection();
+		try {
+			PreparedStatement prepareStatement = conn
+					.prepareStatement("INSERT INTO `Utilisateur` (`username`, `password`) VALUES (?, ?) ");
+			prepareStatement.setString(1, username);
+			prepareStatement.setString(2, sha256Hash(password));
+			prepareStatement.execute();
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+		}
+	}
+
+
+
 }

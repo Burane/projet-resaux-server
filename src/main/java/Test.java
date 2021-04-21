@@ -18,11 +18,6 @@ public class Test {
 		System.out.println(reqLogin);
 		GenericRequestInterface reqRegister = gson.fromJson(jsonRegister, GenericRequest.class);
 		System.out.println(reqRegister);
-		System.out.println();
-		Properties properties = System.getProperties();
-		properties.forEach((k, v) -> System.out.println(k + ":" + v));
-		System.out.println();
-		System.out.println(System.getProperty("test"));
 	}
 
 }
