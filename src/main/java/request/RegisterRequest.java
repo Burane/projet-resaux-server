@@ -1,6 +1,7 @@
 package request;
 
 import BDDconnection.BDDConnection;
+import server.Client;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,7 +23,7 @@ public class RegisterRequest extends GenericRequest implements GenericRequestInt
 	}
 
 	@Override
-	public void handle() {
+	public void handle(Client client) {
 		Connection conn = BDDConnection.getConnection();
 		try {
 			PreparedStatement prepareStatement = conn

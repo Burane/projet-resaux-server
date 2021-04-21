@@ -9,7 +9,9 @@ public enum RequestType {
 
 	UPLOAD("upload"),
 
-	RESEARCH("research");
+	RESEARCH("research"),
+
+	DISCONNECT("disconnect");
 
 	private String field;
 

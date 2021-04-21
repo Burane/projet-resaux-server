@@ -1,5 +1,7 @@
 package request;
 
+import server.Client;
+
 public interface GenericRequestInterface {
-	void handle();
+	void handle(Client client);
 }

@@ -16,7 +16,7 @@ public class Client implements Runnable {
 	private PrintStream writer;
 	private BufferedReader reader;
 	private RequestHandler requestHandler;
-
+	private boolean isAuthentified = false;
 
 	public Client(Socket ClientSock) {
 		client = ClientSock;
@@ -44,6 +44,7 @@ public class Client implements Runnable {
 		}
 		writer.flush();
 	}
+
 	public void respond(String content) {
 		try {
 			writer = new PrintStream(client.getOutputStream());
@@ -77,4 +78,19 @@ public class Client implements Runnable {
 		return str;
 	}
 
+	public boolean isAuthentified() {
+		return isAuthentified;
+	}
+
+	public void setAuthentified(boolean authentified) {
+		isAuthentified = authentified;
+	}
+
+	public void close() {
+		try {
+			client.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

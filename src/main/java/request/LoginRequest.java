@@ -1,6 +1,7 @@
 package request;
 
 import BDDconnection.BDDConnection;
+import server.Client;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,8 +24,13 @@ public class LoginRequest extends GenericRequest implements GenericRequestInterf
 	}
 
 	@Override
-	public void handle() {
-		return;
+	public void handle(Client client) {
+		if(client.isAuthentified())
+			return;
+		boolean isAuthenticateSuccess = authenticate();
+		client.setAuthentified(isAuthenticateSuccess);
+		String response = isAuthenticateSuccess ? "Authentification success" : "Authentification error";
+		client.respond(response);
 	}
 
 	public boolean authenticate() {
