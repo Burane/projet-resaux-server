@@ -28,9 +28,7 @@ public class Client implements Runnable {
 			String request = receiveContent();
 			if (!request.isEmpty()) {
 				System.out.println(request);
-				respond("got you !".getBytes(StandardCharsets.UTF_8));
 				requestHandler.handle(request);
-
 			}
 		}
 	}

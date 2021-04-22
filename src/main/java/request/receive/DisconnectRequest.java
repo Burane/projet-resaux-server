@@ -1,5 +1,7 @@
-package request;
+package request.receive;
 
+import request.GenericRequest;
+import request.GenericRequestInterface;
 import server.Client;
 
 public class DisconnectRequest extends GenericRequest implements GenericRequestInterface {

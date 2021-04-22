@@ -1,6 +1,8 @@
-package request;
+package request.receive;
 
 import BDDconnection.BDDConnection;
+import request.GenericRequest;
+import request.GenericRequestInterface;
 import server.Client;
 
 import java.sql.Connection;

@@ -9,7 +9,7 @@ public enum RequestType {
 
 	UPLOAD("upload"),
 
-	RESEARCH("research"),
+	SEARCH("research"),
 
 	DISCONNECT("disconnect");
 
@@ -17,13 +17,10 @@ public enum RequestType {
 
 	@Override
 	public String toString() {
-		return "RequestType{" + "field='" + field + '\'' + '}';
+		return field;
 	}
 
 	RequestType(String field) {
 		this.field = field;
-	}
-	public String getField(){
-		return this.field;
 	}
 }

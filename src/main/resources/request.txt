@@ -8,4 +8,15 @@
   "type": "login",
   "username": "Younes",
   "password": "1997"
-}
+}\n
+
+{
+  "type": "research",
+  "query": "un poisson dans l'ocean",
+  "limitFrom": 0,
+  "limitTo": 10
+}\n
+
+{
+"type" : "disconnect"
+}\n
