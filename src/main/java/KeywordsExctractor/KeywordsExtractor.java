@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class KeywordsExtractor {
-	private Stopwords stopwords;
+	private final Stopwords stopwords;
 
 	public KeywordsExtractor(Langage langage) {
 		this.stopwords = new Stopwords(langage);

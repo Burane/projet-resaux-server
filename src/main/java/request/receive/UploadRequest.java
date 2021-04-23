@@ -1,7 +1,6 @@
 package request.receive;
 
 import BDDconnection.BDDConnection;
-import Utils.SQLUtils;
 import net.coobird.thumbnailator.Thumbnails;
 import request.GenericRequest;
 import request.GenericRequestInterface;
@@ -18,9 +17,9 @@ import java.util.Arrays;
 import java.util.Base64;
 
 public class UploadRequest extends GenericRequest implements GenericRequestInterface {
-	private String data;
-	private String titre;
-	private String[] tags;
+	private final String data;
+	private final String titre;
+	private final String[] tags;
 
 	public UploadRequest(String data, String titre, String[] tags) {
 		this.data = data;
@@ -47,7 +46,7 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 		Savepoint save = null;
 		try {
 			connection.setAutoCommit(false);
-			connection.setSavepoint();
+			save = connection.setSavepoint();
 		} catch (SQLException throwables) {
 			throwables.printStackTrace();
 		}

@@ -1,11 +1,9 @@
 package request.send;
 
-import java.util.ArrayList;
-
 public class ImageResponse extends GenericResponse {
-	private String titre;
-	private String data;
-	private int imageId;
+	private final String titre;
+	private final String data;
+	private final int imageId;
 
 	public ImageResponse(String titre, String data, int imageId) {
 		this.titre = titre;

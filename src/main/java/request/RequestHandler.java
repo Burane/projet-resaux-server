@@ -4,10 +4,6 @@ import com.google.gson.Gson;
 import gson.RequestDeserializer;
 import server.Client;
 
-import java.io.ByteArrayInputStream;
-import java.net.Socket;
-import java.util.Base64;
-
 public class RequestHandler {
 	private final Client client;
 

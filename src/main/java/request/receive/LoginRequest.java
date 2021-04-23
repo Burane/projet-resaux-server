@@ -5,7 +5,6 @@ import request.GenericRequest;
 import request.GenericRequestInterface;
 import request.send.AuthentificationResponse;
 import request.send.ErrorResponse;
-import request.send.SuccessResponse;
 import server.Client;
 
 import java.sql.Connection;
@@ -14,8 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class LoginRequest extends GenericRequest implements GenericRequestInterface {
-	public String username;
-	public String password;
+	public final String username;
+	public final String password;
 
 	public LoginRequest(String username, String password) {
 		super();
@@ -50,8 +49,7 @@ public class LoginRequest extends GenericRequest implements GenericRequestInterf
 			prepareStatement.setString(2, sha256Hash(password));
 			ResultSet resultSet = prepareStatement.executeQuery();
 			if (resultSet.next()) {
-				int id = resultSet.getInt(1);
-				return id;
+				return resultSet.getInt(1);
 			}
 
 		} catch (SQLException throwables) {

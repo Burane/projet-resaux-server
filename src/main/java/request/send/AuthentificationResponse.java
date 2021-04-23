@@ -1,7 +1,7 @@
 package request.send;
 
 public class AuthentificationResponse extends GenericResponse {
-	private boolean success;
+	private final boolean success;
 
 	public AuthentificationResponse(boolean success) {
 		this.success = success;

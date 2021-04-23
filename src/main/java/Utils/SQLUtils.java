@@ -17,7 +17,7 @@ public abstract class SQLUtils {
 						stringBuilder.append("  |  ");
 					}
 					String columnValue = resultSet.getString(i);
-					stringBuilder.append(rsmd.getColumnName(i) + "  " + columnValue);
+					stringBuilder.append(rsmd.getColumnName(i)).append("  ").append(columnValue);
 				}
 				stringBuilder.append("\n");
 			}

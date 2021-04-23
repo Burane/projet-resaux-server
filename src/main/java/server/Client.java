@@ -2,24 +2,18 @@ package server;
 
 import request.RequestHandler;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Queue;
 
 public class Client implements Runnable {
 
-	private Socket client;
+	private final Socket client;
 	private PrintStream writer;
 	private BufferedReader reader;
 	private RequestHandler requestHandler;
-	private LinkedList<String> queue = new LinkedList<String>();
+	private final LinkedList<String> queue = new LinkedList<>();
 	private boolean isAuthentified = false;
 	private int userId = -1;
 
@@ -31,6 +25,7 @@ public class Client implements Runnable {
 		requestHandler = new RequestHandler(this);
 		while (true) {
 			String request = receiveContent();
+			assert request != null;
 			if (!request.isEmpty()) {
 				queue.addFirst(request);
 				System.out.println(request);
@@ -71,17 +66,18 @@ public class Client implements Runnable {
 	}
 
 	private String readBuffer(InputStream stream) throws IOException {
-		String str = "", line;
+		StringBuilder str = new StringBuilder();
+		String line;
 		reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
 		while ((line = reader.readLine()) != null) {
 			if (line.isEmpty())
 				break;
-			str += line + "\n";
+			str.append(line).append("\n");
 		}
 
 		while (reader.ready())
-			str += (char) reader.read();
-		return str;
+			str.append((char) reader.read());
+		return str.toString();
 	}
 
 	public boolean isAuthentified() {

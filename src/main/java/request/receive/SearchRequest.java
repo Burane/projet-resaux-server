@@ -3,7 +3,6 @@ package request.receive;
 import BDDconnection.BDDConnection;
 import KeywordsExctractor.KeywordsExtractor;
 import KeywordsExctractor.Langage;
-import Utils.SQLUtils;
 import request.GenericRequest;
 import request.GenericRequestInterface;
 import request.send.ErrorResponse;
@@ -11,7 +10,6 @@ import request.send.ImageResponse;
 import request.send.SearchResponse;
 import server.Client;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -75,7 +73,7 @@ public class SearchRequest extends GenericRequest implements GenericRequestInter
 			queryBuilder.append(isFirstWhere ? "WHERE" : "OR");
 			queryBuilder.append(" Titre LIKE ? ");
 			isFirstWhere = false;
-			queryBuilder.append(isFirstWhere ? "WHERE" : "OR");
+			queryBuilder.append("OR");
 			queryBuilder.append(" Libelle LIKE ? ");
 		}
 

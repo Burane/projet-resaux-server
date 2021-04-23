@@ -2,7 +2,7 @@ package request.send;
 
 public class ErrorResponse extends GenericResponse {
 
-	private String message;
+	private final String message;
 
 	public ErrorResponse(String errorMessage) {
 		super();

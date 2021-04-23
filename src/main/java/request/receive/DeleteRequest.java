@@ -39,7 +39,7 @@ public class DeleteRequest extends GenericRequest implements GenericRequestInter
 					deleteFromUpload(connection, id);
 					deleteImage(connection, id);
 				} else {
-					client.respond(new ErrorResponse("Image : " + imageId + " is not your image.").toJson());
+					client.respond(new ErrorResponse("Image : " + id + " is not your image.").toJson());
 				}
 			} catch (SQLException throwables) {
 				client.respond(new ErrorResponse(throwables.getMessage()).toJson());
@@ -67,7 +67,7 @@ public class DeleteRequest extends GenericRequest implements GenericRequestInter
 				.prepareStatement("SELECT COUNT(*) FROM Upload WHERE Id_Image = ? AND Id_Utilisateur = ? ");
 		preparedStatement.setInt(1, id);
 		preparedStatement.setInt(2, userId);
-		ResultSet resultSet = ((PreparedStatement) preparedStatement).executeQuery();
+		ResultSet resultSet = preparedStatement.executeQuery();
 		if (resultSet.next()) {
 			return resultSet.getInt(1) > 0;
 		}

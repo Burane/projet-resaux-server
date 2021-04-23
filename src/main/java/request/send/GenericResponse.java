@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import java.util.Locale;
 
 public class GenericResponse {
-	private String type;
+	private final String type;
 
 	public GenericResponse() {
 		String name = getClass().getSimpleName().toLowerCase(Locale.ROOT);

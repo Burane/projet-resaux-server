@@ -4,7 +4,7 @@ public enum Langage {
 	FRENCH("fr"),
 	ENGLISH("en");
 
-	private String libelle;
+	private final String libelle;
 
 	Langage(String libelle) {
 		this.libelle = libelle;

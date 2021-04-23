@@ -15,6 +15,7 @@ public abstract class GenericRequest implements GenericRequestInterface {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
+		assert digest != null;
 		final byte[] hashBytes = digest.digest(originalString.getBytes(StandardCharsets.UTF_8));
 		return ByteUtils.bytesToHex(hashBytes);
 	}

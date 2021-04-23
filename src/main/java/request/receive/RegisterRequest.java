@@ -12,8 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class RegisterRequest extends GenericRequest implements GenericRequestInterface {
-	public String username;
-	public String password;
+	public final String username;
+	public final String password;
 
 	public RegisterRequest(String username, String password) {
 		super();

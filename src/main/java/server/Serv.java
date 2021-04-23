@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
-
 
 public class Serv implements Runnable {
 
@@ -17,8 +15,6 @@ public class Serv implements Runnable {
 		try {
 			server = new ServerSocket(port, 100,
 					InetAddress.getByName(adresse)); // 100 nombre de connections en attente max
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -32,7 +28,7 @@ public class Serv implements Runnable {
 
 	@Override
 	public void run() {
-		while (isRunning == true) {
+		while (isRunning) {
 
 			try {
 				Socket client = server.accept();

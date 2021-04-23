@@ -15,7 +15,7 @@ public enum RequestType {
 
 	IMAGE("image");
 
-	private String field;
+	private final String field;
 
 	@Override
 	public String toString() {
