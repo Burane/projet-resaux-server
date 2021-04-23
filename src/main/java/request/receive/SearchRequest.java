@@ -8,10 +8,12 @@ import request.GenericRequest;
 import request.GenericRequestInterface;
 import server.Client;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class SearchRequest extends GenericRequest implements GenericRequestInterface {
 	private String query;
@@ -40,11 +42,13 @@ public class SearchRequest extends GenericRequest implements GenericRequestInter
 
 		for (String keyword : keywords) {
 			try {
-				PreparedStatement prepareStatement = conn.prepareStatement("INSERT INTO Champ (Champ) VALUES (?) ON DUPLICATE KEY UPDATE Id_Champ=Id_Champ");
+				PreparedStatement prepareStatement = conn.prepareStatement(
+						"INSERT INTO Champ (Champ) VALUES (?) ON DUPLICATE KEY UPDATE Id_Champ=Id_Champ");
 				prepareStatement.setString(1, keyword);
 				prepareStatement.execute();
 
-				PreparedStatement prepareStatement2 = conn.prepareStatement("INSERT INTO Recherche (`Id_Utilisateur`, `Id_Champ`) VALUES (?, (SELECT Id_Champ FROM Champ WHERE Champ LIKE ?))");
+				PreparedStatement prepareStatement2 = conn.prepareStatement(
+						"INSERT INTO Recherche (`Id_Utilisateur`, `Id_Champ`) VALUES (?, (SELECT Id_Champ FROM Champ WHERE Champ LIKE ?))");
 				prepareStatement2.setInt(1, userId);
 				prepareStatement2.setString(1, keyword);
 				prepareStatement2.execute();

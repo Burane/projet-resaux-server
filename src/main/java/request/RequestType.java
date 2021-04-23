@@ -1,7 +1,5 @@
 package request;
 
-import com.google.gson.annotations.SerializedName;
-
 public enum RequestType {
 	REGISTER("register"),
 
