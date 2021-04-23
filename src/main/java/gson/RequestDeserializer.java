@@ -15,7 +15,8 @@ public abstract class RequestDeserializer {
 				.registerSubtype(LoginRequest.class, RequestType.LOGIN.toString())
 				.registerSubtype(DisconnectRequest.class, RequestType.DISCONNECT.toString())
 				.registerSubtype(SearchRequest.class, RequestType.SEARCH.toString())
-				.registerSubtype(UploadRequest.class, RequestType.UPLOAD.toString());
+				.registerSubtype(UploadRequest.class, RequestType.UPLOAD.toString())
+				.registerSubtype(DeleteRequest.class, RequestType.DELETE.toString());
 
 		Gson gson = new GsonBuilder().registerTypeAdapterFactory(typeAdapterFactory).create();
 		return gson;

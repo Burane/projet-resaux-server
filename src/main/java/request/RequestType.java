@@ -9,7 +9,9 @@ public enum RequestType {
 
 	SEARCH("research"),
 
-	DISCONNECT("disconnect");
+	DISCONNECT("disconnect"),
+
+	DELETE("delete");
 
 	private String field;
 

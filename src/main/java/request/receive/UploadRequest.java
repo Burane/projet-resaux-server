@@ -44,6 +44,7 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 		Connection connection = BDDConnection.getConnection();
 		Savepoint save = null;
 		try {
+			connection.setAutoCommit(false);
 			connection.setSavepoint();
 		} catch (SQLException throwables) {
 			throwables.printStackTrace();
@@ -66,6 +67,12 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 				throwables.printStackTrace();
 			}
 			throwable.printStackTrace();
+		} finally {
+			try {
+				connection.setAutoCommit(true);
+			} catch (SQLException throwables) {
+				throwables.printStackTrace();
+			}
 		}
 
 		System.out.println("request handled");
