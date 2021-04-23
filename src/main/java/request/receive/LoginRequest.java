@@ -27,30 +27,32 @@ public class LoginRequest extends GenericRequest implements GenericRequestInterf
 
 	@Override
 	public void handle(Client client) {
-		if(client.isAuthentified())
+		if (client.isAuthentified())
 			return;
-		boolean isAuthenticateSuccess = authenticate();
+		int userId = authenticate(); // return -1 if not authentified
+		boolean isAuthenticateSuccess = userId > 0;
+		client.setUserId(userId);
 		client.setAuthentified(isAuthenticateSuccess);
 		String response = isAuthenticateSuccess ? "Authentification success" : "Authentification error";
 		client.respond(response);
 	}
 
-	public boolean authenticate() {
+	public int authenticate() {
 		Connection conn = BDDConnection.getConnection();
 		try {
 			PreparedStatement prepareStatement = conn.prepareStatement(
-					"SELECT COUNT(*) FROM `Utilisateur` WHERE `username` LIKE ? AND `password` LIKE ?");
+					"SELECT Id_Utilisateur FROM `Utilisateur` WHERE `username` LIKE ? AND `password` LIKE ?");
 			prepareStatement.setString(1, username);
 			prepareStatement.setString(2, sha256Hash(password));
 			ResultSet resultSet = prepareStatement.executeQuery();
 			if (resultSet.next()) {
-				int count = resultSet.getInt(1);
-				return count == 1;
+				int id = resultSet.getInt(1);
+				return id;
 			}
 
 		} catch (SQLException throwables) {
 			throwables.printStackTrace();
 		}
-		return false;
+		return -1;
 	}
 }

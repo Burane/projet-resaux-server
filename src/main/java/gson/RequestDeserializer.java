@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import request.GenericRequest;
 import request.RequestType;
-import request.receive.DisconnectRequest;
-import request.receive.LoginRequest;
-import request.receive.RegisterRequest;
-import request.receive.SearchRequest;
+import request.receive.*;
 
 public abstract class RequestDeserializer {
 
@@ -16,8 +13,9 @@ public abstract class RequestDeserializer {
 				.of(GenericRequest.class, "type")
 				.registerSubtype(RegisterRequest.class, RequestType.REGISTER.toString())
 				.registerSubtype(LoginRequest.class, RequestType.LOGIN.toString())
-				.registerSubtype(DisconnectRequest.class,RequestType.DISCONNECT.toString())
-				.registerSubtype(SearchRequest.class,RequestType.SEARCH.toString());
+				.registerSubtype(DisconnectRequest.class, RequestType.DISCONNECT.toString())
+				.registerSubtype(SearchRequest.class, RequestType.SEARCH.toString())
+				.registerSubtype(UploadRequest.class, RequestType.UPLOAD.toString());
 
 		Gson gson = new GsonBuilder().registerTypeAdapterFactory(typeAdapterFactory).create();
 		return gson;

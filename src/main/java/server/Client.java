@@ -17,6 +17,7 @@ public class Client implements Runnable {
 	private BufferedReader reader;
 	private RequestHandler requestHandler;
 	private boolean isAuthentified = false;
+	private int userId = -1;
 
 	public Client(Socket ClientSock) {
 		client = ClientSock;
@@ -64,7 +65,7 @@ public class Client implements Runnable {
 
 	private String readBuffer(InputStream stream) throws IOException {
 		String str = "", line;
-		reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+		reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
 		while ((line = reader.readLine()) != null) {
 			if (line.isEmpty())
 				break;
@@ -82,6 +83,14 @@ public class Client implements Runnable {
 
 	public void setAuthentified(boolean authentified) {
 		isAuthentified = authentified;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
 	public void close() {

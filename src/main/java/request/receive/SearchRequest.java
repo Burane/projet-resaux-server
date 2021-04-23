@@ -17,19 +17,46 @@ public class SearchRequest extends GenericRequest implements GenericRequestInter
 	private String query;
 	private int limitFrom;
 	private int limitTo;
+	private ArrayList<String> keywords;
 
 	@Override
 	public void handle(Client client) {
 		if (!client.isAuthentified()) {
-			client.respond("not connected");
+			client.respond("Error not authentified");
 			return;
 		}
 
 		KeywordsExtractor keywordsExtractor = new KeywordsExtractor(Langage.FRENCH);
 		ArrayList<String> keywords = keywordsExtractor.getKeywords(query);
-
 		System.out.println(Arrays.toString(keywords.toArray()));
 
+		getImages();
+		insertSearch(client.getUserId());
+
+	}
+
+	private void insertSearch(int userId) {
+		Connection conn = BDDConnection.getConnection();
+
+		for (String keyword : keywords) {
+			try {
+				PreparedStatement prepareStatement = conn.prepareStatement("INSERT INTO Champ (Champ) VALUES (?) ON DUPLICATE KEY UPDATE Id_Champ=Id_Champ");
+				prepareStatement.setString(1, keyword);
+				prepareStatement.execute();
+
+				PreparedStatement prepareStatement2 = conn.prepareStatement("INSERT INTO Recherche (`Id_Utilisateur`, `Id_Champ`) VALUES (?, (SELECT Id_Champ FROM Champ WHERE Champ LIKE ?))");
+				prepareStatement2.setInt(1, userId);
+				prepareStatement2.setString(1, keyword);
+				prepareStatement2.execute();
+
+			} catch (SQLException throwables) {
+				throwables.printStackTrace();
+			}
+
+		}
+	}
+
+	public void getImages() {
 		StringBuilder queryBuilder = new StringBuilder();
 
 		boolean isFirstWhere = true;

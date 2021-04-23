@@ -1,28 +1,23 @@
-import KeywordsExctractor.Langage;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import gson.RequestDeserializer;
-import request.GenericRequest;
-import request.GenericRequestInterface;
-
-import java.util.Enumeration;
-import java.util.Properties;
+import java.io.*;
+import java.util.Base64;
 
 public class Test {
 
 
 
 	public static void main(String[] args) {
-		String jsonRegister = "{\"type\":\"register\", \"username\":\"user1\", \"password\":\"user1\" }";
-		String jsonLogin = "{\"type\": \"login\",\"username\": \"user1\",\"password\": \"user1\"}";
-		Gson gson = RequestDeserializer.getDeserializer();
+		File file = new File("C:\\Users\\antoi\\Pictures\\15e31c4b27e4501a8abd64182acbaad5.jpg");
+		try {
+			FileInputStream in = new FileInputStream(file);
 
-		GenericRequestInterface reqLogin = gson.fromJson(jsonLogin, GenericRequest.class);
-		System.out.println(reqLogin);
-		GenericRequestInterface reqRegister = gson.fromJson(jsonRegister, GenericRequest.class);
-		System.out.println(reqRegister);
-
-		System.out.println(Langage.FRENCH);
+			System.out.println( new String(Base64.getEncoder().encode(in.readAllBytes()), "UTF-8"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
