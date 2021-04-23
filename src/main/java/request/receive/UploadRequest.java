@@ -5,6 +5,8 @@ import Utils.SQLUtils;
 import net.coobird.thumbnailator.Thumbnails;
 import request.GenericRequest;
 import request.GenericRequestInterface;
+import request.send.ErrorResponse;
+import request.send.SuccessResponse;
 import server.Client;
 
 import java.io.ByteArrayInputStream;
@@ -35,7 +37,7 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 	@Override
 	public void handle(Client client) {
 		if (!client.isAuthentified()) {
-			client.respond("Error not authentified");
+			client.respond(new ErrorResponse("Not authentified").toJson());
 			return;
 		}
 
@@ -59,8 +61,10 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 				int tagId = createTag(connection, tag);
 				insertPossede(connection, imageId, tagId);
 			}
+			client.respond(new SuccessResponse("Image successfully uploaded").toJson());
 
 		} catch (SQLException throwable) {
+			client.respond(new ErrorResponse(throwable.getMessage()).toJson());
 			try {
 				connection.rollback(save);
 			} catch (SQLException throwables) {

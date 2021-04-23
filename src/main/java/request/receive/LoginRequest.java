@@ -3,6 +3,9 @@ package request.receive;
 import BDDconnection.BDDConnection;
 import request.GenericRequest;
 import request.GenericRequestInterface;
+import request.send.AuthentificationResponse;
+import request.send.ErrorResponse;
+import request.send.SuccessResponse;
 import server.Client;
 
 import java.sql.Connection;
@@ -27,17 +30,18 @@ public class LoginRequest extends GenericRequest implements GenericRequestInterf
 
 	@Override
 	public void handle(Client client) {
-		if (client.isAuthentified())
+		if (client.isAuthentified()) {
+			client.respond(new ErrorResponse("User already authentified").toJson());
 			return;
-		int userId = authenticate(); // return -1 if not authentified
+		}
+		int userId = authenticate(client); // return -1 if not authentified
 		boolean isAuthenticateSuccess = userId > 0;
 		client.setUserId(userId);
 		client.setAuthentified(isAuthenticateSuccess);
-		String response = isAuthenticateSuccess ? "Authentification success" : "Authentification error";
-		client.respond(response);
+		client.respond(new AuthentificationResponse(isAuthenticateSuccess).toJson());
 	}
 
-	public int authenticate() {
+	public int authenticate(Client client) {
 		Connection conn = BDDConnection.getConnection();
 		try {
 			PreparedStatement prepareStatement = conn.prepareStatement(
@@ -51,6 +55,7 @@ public class LoginRequest extends GenericRequest implements GenericRequestInterf
 			}
 
 		} catch (SQLException throwables) {
+			client.respond(new ErrorResponse(throwables.getMessage()).toJson());
 			throwables.printStackTrace();
 		}
 		return -1;

@@ -18,7 +18,7 @@ public class RequestHandler {
 	public void handle(String rawRequest) {
 
 		Gson gson = RequestDeserializer.getDeserializer();
-		GenericRequestInterface request = null;
+		GenericRequestInterface request;
 		try {
 			request = gson.fromJson(rawRequest, GenericRequest.class);
 		} catch (Exception e) {

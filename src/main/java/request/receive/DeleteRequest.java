@@ -3,6 +3,8 @@ package request.receive;
 import BDDconnection.BDDConnection;
 import request.GenericRequest;
 import request.GenericRequestInterface;
+import request.send.ErrorResponse;
+import request.send.SuccessResponse;
 import server.Client;
 
 import java.sql.*;
@@ -12,6 +14,11 @@ public class DeleteRequest extends GenericRequest implements GenericRequestInter
 
 	@Override
 	public void handle(Client client) {
+
+		if (!client.isAuthentified()) {
+			client.respond(new ErrorResponse("Not authentified").toJson());
+			return;
+		}
 
 		Connection connection = BDDConnection.getConnection();
 
@@ -31,9 +38,11 @@ public class DeleteRequest extends GenericRequest implements GenericRequestInter
 					deleteFromPossede(connection, id);
 					deleteFromUpload(connection, id);
 					deleteImage(connection, id);
+				} else {
+					client.respond(new ErrorResponse("Image : " + imageId + " is not your image.").toJson());
 				}
 			} catch (SQLException throwables) {
-
+				client.respond(new ErrorResponse(throwables.getMessage()).toJson());
 				try {
 					connection.rollback(save);
 				} catch (SQLException e) {
@@ -48,7 +57,7 @@ public class DeleteRequest extends GenericRequest implements GenericRequestInter
 					throwables.printStackTrace();
 				}
 			}
-
+			client.respond(new SuccessResponse("Image : " + id + " successfully deleted.").toJson());
 		}
 
 	}
@@ -58,7 +67,7 @@ public class DeleteRequest extends GenericRequest implements GenericRequestInter
 				.prepareStatement("SELECT COUNT(*) FROM Upload WHERE Id_Image = ? AND Id_Utilisateur = ? ");
 		preparedStatement.setInt(1, id);
 		preparedStatement.setInt(2, userId);
-		ResultSet resultSet = preparedStatement.executeQuery();
+		ResultSet resultSet = ((PreparedStatement) preparedStatement).executeQuery();
 		if (resultSet.next()) {
 			return resultSet.getInt(1) > 0;
 		}

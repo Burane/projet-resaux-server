@@ -3,6 +3,8 @@ package request.receive;
 import BDDconnection.BDDConnection;
 import request.GenericRequest;
 import request.GenericRequestInterface;
+import request.send.ErrorResponse;
+import request.send.SuccessResponse;
 import server.Client;
 
 import java.sql.Connection;
@@ -33,7 +35,9 @@ public class RegisterRequest extends GenericRequest implements GenericRequestInt
 			prepareStatement.setString(1, username);
 			prepareStatement.setString(2, sha256Hash(password));
 			prepareStatement.execute();
+			client.respond(new SuccessResponse("Successfully registered").toJson());
 		} catch (SQLException throwables) {
+			client.respond(new ErrorResponse(throwables.getMessage()).toJson());
 			throwables.printStackTrace();
 		}
 	}

@@ -7,11 +7,13 @@ public enum RequestType {
 
 	UPLOAD("upload"),
 
-	SEARCH("research"),
+	SEARCH("search"),
 
 	DISCONNECT("disconnect"),
 
-	DELETE("delete");
+	DELETE("delete"),
+
+	IMAGE("image");
 
 	private String field;
 
