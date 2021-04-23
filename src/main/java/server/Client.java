@@ -9,6 +9,9 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Client implements Runnable {
 
@@ -16,6 +19,7 @@ public class Client implements Runnable {
 	private PrintStream writer;
 	private BufferedReader reader;
 	private RequestHandler requestHandler;
+	private LinkedList<String> queue = new LinkedList<String>;
 	private boolean isAuthentified = false;
 	private int userId = -1;
 
@@ -28,8 +32,11 @@ public class Client implements Runnable {
 		while (true) {
 			String request = receiveContent();
 			if (!request.isEmpty()) {
+				queue.addFirst(request);
 				System.out.println(request);
-				requestHandler.handle(request);
+				String currentRequest = queue.pollLast();
+				if (currentRequest != null)
+					requestHandler.handle(currentRequest);
 			}
 		}
 	}

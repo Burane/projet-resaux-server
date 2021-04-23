@@ -16,7 +16,7 @@ public class Serv implements Runnable {
 
 		try {
 			server = new ServerSocket(port, 100,
-					InetAddress.getByName(adresse)); // 100 nombre de conections en attente max
+					InetAddress.getByName(adresse)); // 100 nombre de connections en attente max
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
