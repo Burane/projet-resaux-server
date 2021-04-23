@@ -24,6 +24,6 @@
 {
 "type" : "upload",
 "titre" : "un chat qui saute",
-"tags" : ["chat"],
-"data" : "base64"
-}
+"tags" : ["chat","chien"],
+"data" : "iVBORw0KGgoAAAANSUhEUgAAAAYAAAABCAYAAAD9yd/wAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAARSURBVBhXY9DW1v6PibX/AwBpJQkBqn6RgQAAAABJRU5ErkJggg=="
+}\n

@@ -19,7 +19,7 @@ public class Client implements Runnable {
 	private PrintStream writer;
 	private BufferedReader reader;
 	private RequestHandler requestHandler;
-	private LinkedList<String> queue = new LinkedList<String>;
+	private LinkedList<String> queue = new LinkedList<String>();
 	private boolean isAuthentified = false;
 	private int userId = -1;
 

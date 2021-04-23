@@ -1,19 +1,36 @@
 package request.receive;
 
 import BDDconnection.BDDConnection;
+import Utils.SQLUtils;
+import net.coobird.thumbnailator.Thumbnails;
 import request.GenericRequest;
 import request.GenericRequestInterface;
 import server.Client;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
+import java.util.Arrays;
 import java.util.Base64;
 
 public class UploadRequest extends GenericRequest implements GenericRequestInterface {
 	private String data;
 	private String titre;
 	private String[] tags;
+
+	public UploadRequest(String data, String titre, String[] tags) {
+		this.data = data;
+		this.titre = titre;
+		this.tags = tags;
+	}
+
+	@Override
+	public String toString() {
+		return "UploadRequest{" + "data='" + data + '\'' + ", \ntitre='" + titre + '\'' + ", tags=" + Arrays
+				.toString(tags) + '}';
+	}
 
 	@Override
 	public void handle(Client client) {
@@ -22,21 +39,36 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 			return;
 		}
 
+		System.out.println(this);
+
 		Connection connection = BDDConnection.getConnection();
+		Savepoint save = null;
+		try {
+			connection.setSavepoint();
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+		}
 
 		try {
 			int imageId = insertImage(connection); // return -1 if error
 
 			insertUpload(client.getUserId(), connection, imageId);
 
-			for (int i = 0; i < tags.length; i++) {
-				int tagId = createTag(connection, tags[i]);
+			for (String tag : tags) {
+				int tagId = createTag(connection, tag);
 				insertPossede(connection, imageId, tagId);
 			}
 
 		} catch (SQLException throwable) {
+			try {
+				connection.rollback(save);
+			} catch (SQLException throwables) {
+				throwables.printStackTrace();
+			}
 			throwable.printStackTrace();
 		}
+
+		System.out.println("request handled");
 
 	}
 
@@ -59,14 +91,23 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 	private int insertImage(Connection connection) throws SQLException {
 
 		byte[] binaryImage = Base64.getDecoder().decode(data);
-		InputStream inputStream = new ByteArrayInputStream(binaryImage);
+		InputStream fullSizeImage = new ByteArrayInputStream(binaryImage);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		System.out.println("before resize");
+		try {
+			Thumbnails.of(fullSizeImage).scale(0.25).outputQuality(0.25).toOutputStream(out);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		InputStream tinyImage = new ByteArrayInputStream(out.toByteArray());
+		System.out.println("after resize");
 
 		PreparedStatement preparedStatement = connection
 				.prepareStatement("INSERT INTO Image (Titre, Full_Image, Tiny_Image) VALUES (?, ?, ?)",
 						Statement.RETURN_GENERATED_KEYS);
 		preparedStatement.setString(1, titre);
-		preparedStatement.setBinaryStream(2, inputStream);
-		preparedStatement.setBinaryStream(3, inputStream);
+		preparedStatement.setBinaryStream(2, fullSizeImage);
+		preparedStatement.setBinaryStream(3, tinyImage);
 		preparedStatement.execute();
 
 		ResultSet resultSet = preparedStatement.getGeneratedKeys();
@@ -77,23 +118,26 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 
 	private int createTag(Connection connection, String tag) throws SQLException {
 		int tagId = -1;
-		PreparedStatement prepareStatement = connection
-				.prepareStatement("INSERT INTO Tag (Libelle) VALUES (?) ON DUPLICATE KEY UPDATE Id_Tag=Id_Tag",
-						Statement.RETURN_GENERATED_KEYS);
-		prepareStatement.setString(1, tag);
-		prepareStatement.execute();
 
-		ResultSet resultSet = prepareStatement.getGeneratedKeys();
-		if (resultSet.next())
-			tagId = resultSet.getInt(1);
+		PreparedStatement preparedStatement2 = connection
+				.prepareStatement("SELECT Id_Tag FROM Tag WHERE Libelle LIKE ?");
+		preparedStatement2.setString(1, tag);
+		ResultSet resultSet2 = preparedStatement2.executeQuery();
+
+		if (resultSet2.next())
+			tagId = resultSet2.getInt(1);
+
+		System.out.println("TAG ID = " + tagId);
 
 		if (tagId == -1) {
-			PreparedStatement preparedStatement2 = connection
-					.prepareStatement("SELECT Id_Tag FROM Tag WHERE Libelle LIKE ?");
-			preparedStatement2.setString(1, tag);
-			ResultSet resultSet2 = preparedStatement2.executeQuery();
 
-			if (resultSet2.next())
+			PreparedStatement prepareStatement = connection
+					.prepareStatement("INSERT INTO Tag (Libelle) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+			prepareStatement.setString(1, tag);
+			prepareStatement.execute();
+
+			ResultSet resultSet = prepareStatement.getGeneratedKeys();
+			if (resultSet.next())
 				tagId = resultSet.getInt(1);
 
 		}
