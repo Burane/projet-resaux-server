@@ -26,7 +26,7 @@ public class SearchRequest extends GenericRequest implements GenericRequestInter
 	@Override
 	public void handle(Client client) {
 		if (!client.isAuthentified()) {
-			client.respond(new ErrorResponse("Not authentified").toJson());
+			client.respond(new ErrorResponse("Not authentified"));
 			return;
 		}
 
@@ -100,10 +100,10 @@ public class SearchRequest extends GenericRequest implements GenericRequestInter
 				imageResponses.add(new ImageResponse(titre, data, id));
 			}
 			SearchResponse response = new SearchResponse(imageResponses);
-			client.respond(response.toJson());
+			client.respond(response);
 
 		} catch (SQLException | IOException throwables) {
-			client.respond(new ErrorResponse(throwables.getMessage()).toJson());
+			client.respond(new ErrorResponse(throwables.getMessage()));
 			throwables.printStackTrace();
 		}
 	}

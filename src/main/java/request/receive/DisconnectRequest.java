@@ -10,10 +10,10 @@ public class DisconnectRequest extends GenericRequest implements GenericRequestI
 	@Override
 	public void handle(Client client) {
 		if(!client.isAuthentified()) {
-			client.respond(new ErrorResponse("Not authentified").toJson());
+			client.respond(new ErrorResponse("Not authentified"));
 			return;
 		}
-		client.respond(new SuccessResponse("Successfully disconnected").toJson());
+		client.respond(new SuccessResponse("Successfully disconnected"));
 		client.close();
 	}
 }

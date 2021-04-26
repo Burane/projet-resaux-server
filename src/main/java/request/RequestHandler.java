@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import gson.RequestDeserializer;
 import request.receive.GenericRequest;
 import request.receive.GenericRequestInterface;
+import request.send.ErrorResponse;
 import server.Client;
 
 public class RequestHandler {
@@ -21,7 +22,8 @@ public class RequestHandler {
 			request = gson.fromJson(rawRequest, GenericRequest.class);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
-			client.respond("Error syntax in request : \r" + rawRequest);
+
+			client.respond(new ErrorResponse("Error syntax in request : \r" + rawRequest));
 			return;
 		}
 

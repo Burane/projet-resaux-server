@@ -28,14 +28,14 @@ public class LoginRequest extends GenericRequest implements GenericRequestInterf
 	@Override
 	public void handle(Client client) {
 		if (client.isAuthentified()) {
-			client.respond(new ErrorResponse("User already authentified").toJson());
+			client.respond(new ErrorResponse("User already authentified"));
 			return;
 		}
 		int userId = authenticate(client); // return -1 if not authentified
 		boolean isAuthenticateSuccess = userId > 0;
 		client.setUserId(userId);
 		client.setAuthentified(isAuthenticateSuccess);
-		client.respond(new AuthentificationResponse(isAuthenticateSuccess).toJson());
+		client.respond(new AuthentificationResponse(isAuthenticateSuccess));
 	}
 
 	public int authenticate(Client client) {
@@ -51,7 +51,7 @@ public class LoginRequest extends GenericRequest implements GenericRequestInterf
 			}
 
 		} catch (SQLException throwables) {
-			client.respond(new ErrorResponse(throwables.getMessage()).toJson());
+			client.respond(new ErrorResponse(throwables.getMessage()));
 			throwables.printStackTrace();
 		}
 		return -1;

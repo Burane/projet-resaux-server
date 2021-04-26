@@ -18,7 +18,7 @@ public class ImageRequest extends GenericRequest implements GenericRequestInterf
 	@Override
 	public void handle(Client client) {
 		if (!client.isAuthentified()) {
-			client.respond(new ErrorResponse("Not authentified").toJson());
+			client.respond(new ErrorResponse("Not authentified"));
 			return;
 		}
 
@@ -39,9 +39,9 @@ public class ImageRequest extends GenericRequest implements GenericRequestInterf
 			String data = new String(Base64.getEncoder().encode(binaryData));
 			ImageResponse imageResponse = new ImageResponse(titre, data, id);
 
-			client.respond(imageResponse.toJson());
+			client.respond(imageResponse);
 		} catch (SQLException | IOException throwables) {
-			client.respond(new ErrorResponse(throwables.getMessage()).toJson());
+			client.respond(new ErrorResponse(throwables.getMessage()));
 			throwables.printStackTrace();
 		}
 

@@ -33,9 +33,9 @@ public class RegisterRequest extends GenericRequest implements GenericRequestInt
 			prepareStatement.setString(1, username);
 			prepareStatement.setString(2, sha256Hash(password));
 			prepareStatement.execute();
-			client.respond(new SuccessResponse("Successfully registered").toJson());
+			client.respond(new SuccessResponse("Successfully registered"));
 		} catch (SQLException throwables) {
-			client.respond(new ErrorResponse(throwables.getMessage()).toJson());
+			client.respond(new ErrorResponse(throwables.getMessage()));
 			throwables.printStackTrace();
 		}
 	}

@@ -1,6 +1,7 @@
 package server;
 
 import request.RequestHandler;
+import request.send.GenericResponse;
 
 import java.io.*;
 import java.net.Socket;
@@ -50,6 +51,15 @@ public class Client implements Runnable {
 		try {
 			writer = new PrintStream(client.getOutputStream());
 			writer.write(content.getBytes(StandardCharsets.UTF_8));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		writer.flush();
+	}
+	public void respond(GenericResponse response) {
+		try {
+			writer = new PrintStream(client.getOutputStream());
+			writer.write(response.toJson().getBytes());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

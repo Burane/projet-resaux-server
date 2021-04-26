@@ -34,7 +34,7 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 	@Override
 	public void handle(Client client) {
 		if (!client.isAuthentified()) {
-			client.respond(new ErrorResponse("Not authentified").toJson());
+			client.respond(new ErrorResponse("Not authentified"));
 			return;
 		}
 
@@ -58,10 +58,10 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 				int tagId = createTag(connection, tag);
 				insertPossede(connection, imageId, tagId);
 			}
-			client.respond(new SuccessResponse("Image successfully uploaded").toJson());
+			client.respond(new SuccessResponse("Image successfully uploaded"));
 
 		} catch (SQLException throwable) {
-			client.respond(new ErrorResponse(throwable.getMessage()).toJson());
+			client.respond(new ErrorResponse(throwable.getMessage()));
 			try {
 				connection.rollback(save);
 			} catch (SQLException throwables) {

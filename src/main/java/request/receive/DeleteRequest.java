@@ -14,7 +14,7 @@ public class DeleteRequest extends GenericRequest implements GenericRequestInter
 	public void handle(Client client) {
 
 		if (!client.isAuthentified()) {
-			client.respond(new ErrorResponse("Not authentified").toJson());
+			client.respond(new ErrorResponse("Not authentified"));
 			return;
 		}
 
@@ -37,10 +37,10 @@ public class DeleteRequest extends GenericRequest implements GenericRequestInter
 					deleteFromUpload(connection, id);
 					deleteImage(connection, id);
 				} else {
-					client.respond(new ErrorResponse("Image : " + id + " is not your image.").toJson());
+					client.respond(new ErrorResponse("Image : " + id + " is not your image."));
 				}
 			} catch (SQLException throwables) {
-				client.respond(new ErrorResponse(throwables.getMessage()).toJson());
+				client.respond(new ErrorResponse(throwables.getMessage()));
 				try {
 					connection.rollback(save);
 				} catch (SQLException e) {
@@ -55,7 +55,7 @@ public class DeleteRequest extends GenericRequest implements GenericRequestInter
 					throwables.printStackTrace();
 				}
 			}
-			client.respond(new SuccessResponse("Image : " + id + " successfully deleted.").toJson());
+			client.respond(new SuccessResponse("Image : " + id + " successfully deleted."));
 		}
 
 	}
