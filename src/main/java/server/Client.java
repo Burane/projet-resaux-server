@@ -4,6 +4,7 @@ import request.RequestHandler;
 import request.send.GenericResponse;
 
 import java.io.*;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
@@ -17,29 +18,40 @@ public class Client implements Runnable {
 	private final LinkedList<String> queue = new LinkedList<>();
 	private boolean isAuthentified = false;
 	private int userId = -1;
+	private boolean isRunning = true;
 
 	public Client(Socket ClientSock) {
 		client = ClientSock;
+		try {
+			writer = new PrintStream(client.getOutputStream());
+			reader = new BufferedReader(new InputStreamReader(client.getInputStream(), StandardCharsets.UTF_8));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public void run() {
-		requestHandler = new RequestHandler(this);
-		while (true) {
-			String request = receiveContent();
-			assert request != null;
-			if (!request.isEmpty()) {
-				queue.addFirst(request);
-				System.out.println(request);
-				String currentRequest = queue.pollLast();
-				if (currentRequest != null)
-					requestHandler.handle(currentRequest);
+		try {
+			requestHandler = new RequestHandler(this);
+			while (isRunning) {
+				String request = receiveContent();
+				if (!request.isEmpty()) {
+					queue.addFirst(request);
+					System.out.println(request);
+					String currentRequest = queue.pollLast();
+					if (currentRequest != null) {
+						requestHandler.handle(currentRequest);
+					}
+				}
 			}
+		} catch (ConnectionClosedException e) {
+			close();
 		}
 	}
 
 	public void respond(byte[] content) {
 		try {
-			writer = new PrintStream(client.getOutputStream());
 			writer.write(content);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -49,16 +61,15 @@ public class Client implements Runnable {
 
 	public void respond(String content) {
 		try {
-			writer = new PrintStream(client.getOutputStream());
 			writer.write(content.getBytes(StandardCharsets.UTF_8));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		writer.flush();
 	}
+
 	public void respond(GenericResponse response) {
 		try {
-			writer = new PrintStream(client.getOutputStream());
 			writer.write(response.toJson().getBytes());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -66,27 +77,32 @@ public class Client implements Runnable {
 		writer.flush();
 	}
 
-	private String receiveContent() {
-		try {
-			return readBuffer(client.getInputStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+	private String receiveContent() throws ConnectionClosedException {
+		return readBuffer();
 	}
 
-	private String readBuffer(InputStream stream) throws IOException {
+	private String readBuffer() throws ConnectionClosedException {
 		StringBuilder str = new StringBuilder();
 		String line;
-		reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-		while ((line = reader.readLine()) != null) {
-			if (line.isEmpty())
-				break;
-			str.append(line).append("\n");
-		}
+		try {
+			while ((line = reader.readLine()) != null) {
+				if (line.isEmpty())
+					break;
+				str.append(line);
+			}
 
-		while (reader.ready())
-			str.append((char) reader.read());
+			if (line == null)
+				throw new ConnectionClosedException();
+
+			while (reader.ready()) {
+				int ch = reader.read();
+				if (ch == -1)
+					throw new ConnectionClosedException();
+				str.append((char) ch);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return str.toString();
 	}
 
@@ -107,8 +123,13 @@ public class Client implements Runnable {
 	}
 
 	public void close() {
+		System.out.println("Closing connection with :" + client.getInetAddress() + ":" + client.getLocalPort());
+		isRunning = false;
 		try {
+			reader.close();
+			writer.close();
 			client.close();
+			Thread.currentThread().interrupt();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
