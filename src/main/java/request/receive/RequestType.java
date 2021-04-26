@@ -1,4 +1,4 @@
-package request;
+package request.receive;
 
 public enum RequestType {
 	REGISTER("register"),

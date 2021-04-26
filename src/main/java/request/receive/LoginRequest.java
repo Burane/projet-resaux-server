@@ -1,8 +1,6 @@
 package request.receive;
 
 import BDDconnection.BDDConnection;
-import request.GenericRequest;
-import request.GenericRequestInterface;
 import request.send.AuthentificationResponse;
 import request.send.ErrorResponse;
 import server.Client;

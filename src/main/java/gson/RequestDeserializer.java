@@ -2,8 +2,8 @@ package gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import request.GenericRequest;
-import request.RequestType;
+import request.receive.GenericRequest;
+import request.receive.RequestType;
 import request.receive.*;
 
 public abstract class RequestDeserializer {

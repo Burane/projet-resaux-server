@@ -1,4 +1,4 @@
-package request;
+package request.receive;
 
 import server.Client;
 

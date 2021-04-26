@@ -6,6 +6,7 @@ public class ImageResponse extends GenericResponse {
 	private final int imageId;
 
 	public ImageResponse(String titre, String data, int imageId) {
+		super(ResponseType.IMAGE);
 		this.titre = titre;
 		this.data = data;
 		this.imageId = imageId;

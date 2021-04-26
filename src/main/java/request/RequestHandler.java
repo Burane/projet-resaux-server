@@ -2,6 +2,8 @@ package request;
 
 import com.google.gson.Gson;
 import gson.RequestDeserializer;
+import request.receive.GenericRequest;
+import request.receive.GenericRequestInterface;
 import server.Client;
 
 public class RequestHandler {

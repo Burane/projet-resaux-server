@@ -5,7 +5,7 @@ public class ErrorResponse extends GenericResponse {
 	private final String message;
 
 	public ErrorResponse(String errorMessage) {
-		super();
+		super(ResponseType.ERROR);
 		this.message = errorMessage;
 	}
 }

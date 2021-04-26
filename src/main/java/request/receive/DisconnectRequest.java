@@ -1,7 +1,5 @@
 package request.receive;
 
-import request.GenericRequest;
-import request.GenericRequestInterface;
 import request.send.ErrorResponse;
 import request.send.SuccessResponse;
 import server.Client;

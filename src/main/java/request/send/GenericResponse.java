@@ -2,14 +2,11 @@ package request.send;
 
 import com.google.gson.Gson;
 
-import java.util.Locale;
-
-public class GenericResponse {
+public abstract class GenericResponse {
 	private final String type;
 
-	public GenericResponse() {
-		String name = getClass().getSimpleName().toLowerCase(Locale.ROOT);
-		this.type = name.substring(0, name.length() - "response".length());
+	public GenericResponse(ResponseType type) {
+		this.type = type.toString();
 	}
 
 	public String toJson() {
@@ -21,4 +18,5 @@ public class GenericResponse {
 	public String toString() {
 		return toJson();
 	}
+
 }

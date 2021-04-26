@@ -3,8 +3,6 @@ package request.receive;
 import BDDconnection.BDDConnection;
 import KeywordsExctractor.KeywordsExtractor;
 import KeywordsExctractor.Langage;
-import request.GenericRequest;
-import request.GenericRequestInterface;
 import request.send.ErrorResponse;
 import request.send.ImageResponse;
 import request.send.SearchResponse;
