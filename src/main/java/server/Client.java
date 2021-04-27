@@ -6,6 +6,7 @@ import request.send.GenericResponse;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 
@@ -45,7 +46,7 @@ public class Client implements Runnable {
 					}
 				}
 			}
-		} catch (ConnectionClosedException e) {
+		} catch (Exception e) {
 			close();
 		}
 	}
@@ -77,14 +78,14 @@ public class Client implements Runnable {
 		writer.flush();
 	}
 
-	private String receiveContent() throws ConnectionClosedException {
+	private String receiveContent() {
 		return readBuffer();
 	}
 
-	private String readBuffer() throws ConnectionClosedException {
+	private String readBuffer() throws Exception {
 		StringBuilder str = new StringBuilder();
 		String line;
-		try {
+		
 			while ((line = reader.readLine()) != null) {
 				if (line.isEmpty())
 					break;
@@ -100,9 +101,7 @@ public class Client implements Runnable {
 					throw new ConnectionClosedException();
 				str.append((char) ch);
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		 
 		return str.toString();
 	}
 
