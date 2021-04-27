@@ -78,7 +78,7 @@ public class Client implements Runnable {
 		writer.flush();
 	}
 
-	private String receiveContent() {
+	private String receiveContent() throws Exception {
 		return readBuffer();
 	}
 
@@ -93,12 +93,10 @@ public class Client implements Runnable {
 			}
 
 			if (line == null)
-				throw new ConnectionClosedException();
 
 			while (reader.ready()) {
 				int ch = reader.read();
 				if (ch == -1)
-					throw new ConnectionClosedException();
 				str.append((char) ch);
 			}
 		 
