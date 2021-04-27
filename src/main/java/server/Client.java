@@ -91,7 +91,6 @@ public class Client implements Runnable {
 					break;
 				str.append(line);
 			}
-
 			if (line == null)
 
 			while (reader.ready()) {
@@ -99,7 +98,6 @@ public class Client implements Runnable {
 				if (ch == -1)
 				str.append((char) ch);
 			}
-		 
 		return str.toString();
 	}
 
