@@ -33,8 +33,7 @@ public class Serv implements Runnable {
 			try {
 				Socket client = server.accept();
 
-				System.out
-						.println("Connexion avec : " + client.getInetAddress() + " sur le port : " + client.getPort());
+				System.out.println("Connexion avec : " + client.getInetAddress() + " sur le port : " + client.getPort());
 				Thread t = new Thread(new Client(client));
 				t.start();
 
