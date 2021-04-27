@@ -54,6 +54,7 @@ public class Client implements Runnable {
 	public void respond(byte[] content) {
 		try {
 			writer.write(content);
+			writeEndLine();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -63,6 +64,7 @@ public class Client implements Runnable {
 	public void respond(String content) {
 		try {
 			writer.write(content.getBytes(StandardCharsets.UTF_8));
+			writeEndLine();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -72,10 +74,19 @@ public class Client implements Runnable {
 	public void respond(GenericResponse response) {
 		try {
 			writer.write(response.toJson().getBytes());
+			writeEndLine();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		writer.flush();
+	}
+
+	private void writeEndLine() {
+		try {
+			writer.write("\n\r".getBytes(StandardCharsets.UTF_8));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private String receiveContent() throws Exception {
@@ -91,11 +102,9 @@ public class Client implements Runnable {
 					break;
 				str.append(line);
 			}
-			if (line == null)
 
 			while (reader.ready()) {
 				int ch = reader.read();
-				if (ch == -1)
 				str.append((char) ch);
 			}
 		return str.toString();
