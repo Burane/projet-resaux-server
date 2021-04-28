@@ -28,8 +28,8 @@ public class FullImageRequest extends GenericRequest implements GenericRequestIn
 		try {
 			preparedStatement = connection.prepareStatement(
 					"SELECT Id_Image, Titre, Full_Image, " +
-							"(SELECT COUNT(*) FROM Note WHERE Note = 1 AND Id_Image = ?) as nb_like, " +
-							"IFNULL((SELECT Note FROM Note WHERE Id_Image = ? AND Id_Utilisateur = ?), 0) as isLikedByUser ," +
+							"(SELECT COUNT(*) FROM Note WHERE Id_Image = ?) as nb_like, " +
+							"(SELECT COUNT(*) FROM Note WHERE Id_Image = ? AND Id_Utilisateur = ?) as isLikedByUser ," +
 							"(SELECT COUNT(*) FROM Upload WHERE Id_Image = ? AND Id_Utilisateur = ?) as isOwnedByUser " +
 							"FROM Image WHERE Id_Image = ?");
 			preparedStatement.setInt(1, imageId);
