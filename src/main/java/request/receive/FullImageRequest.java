@@ -2,7 +2,8 @@ package request.receive;
 
 import BDDconnection.BDDConnection;
 import request.send.ErrorResponse;
-import request.send.ImageResponse;
+import request.send.FullImageResponse;
+import request.send.PreviewImageResponse;
 import server.Client;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Base64;
 
-public class ImageRequest extends GenericRequest implements GenericRequestInterface {
+public class FullImageRequest extends GenericRequest implements GenericRequestInterface {
 	private int imageId;
 
 	@Override
@@ -26,9 +27,15 @@ public class ImageRequest extends GenericRequest implements GenericRequestInterf
 
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection
-					.prepareStatement("SELECT Id_Image, Titre, Full_Image  FROM Image WHERE Id_Image = ?");
+			preparedStatement = connection.prepareStatement(
+					"SELECT Id_Image, Titre, Full_Image, " +
+							"(SELECT COUNT(*) FROM Note WHERE Note = 1 AND Id_Image = ?) as nb_like, " +
+							"IFNULL((SELECT Note FROM Note WHERE Id_Image = ? AND Id_Utilisateur = ?),0) as isLikedByUser " +
+							"FROM Image WHERE Id_Image = ?");
 			preparedStatement.setInt(1, imageId);
+			preparedStatement.setInt(2, imageId);
+			preparedStatement.setInt(3, client.getUserId());
+			preparedStatement.setInt(4, imageId);
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -37,9 +44,11 @@ public class ImageRequest extends GenericRequest implements GenericRequestInterf
 			int id = resultSet.getInt("Id_Image");
 			byte[] binaryData = resultSet.getBinaryStream("Full_Image").readAllBytes();
 			String data = new String(Base64.getEncoder().encode(binaryData));
-			ImageResponse imageResponse = new ImageResponse(titre, data, id);
+			int nbLike = resultSet.getInt("nb_like");
+			boolean isLikedByUser = resultSet.getBoolean("isLikedByUser");
+			FullImageResponse fullImageResponse = new FullImageResponse(titre, data, id, nbLike, isLikedByUser);
 
-			client.respond(imageResponse);
+			client.respond(fullImageResponse);
 		} catch (SQLException | IOException throwables) {
 			client.respond(new ErrorResponse(throwables.getMessage()));
 			throwables.printStackTrace();

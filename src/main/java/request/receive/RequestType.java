@@ -13,7 +13,9 @@ public enum RequestType {
 
 	DELETE("delete"),
 
-	IMAGE("image");
+	PREVIEWIMAGE("previewImage"),
+
+	FULLIMAGE("fullImage");
 
 	private final String field;
 

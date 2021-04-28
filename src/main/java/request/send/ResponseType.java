@@ -4,7 +4,8 @@ public enum ResponseType {
 	AUTHENTIFICATION("authentification"),
 	ERROR("error"),
 	SUCCESS("success"),
-	IMAGE("image"),
+	PREVIEWIMAGE("previewImage"),
+	FULLIMAGE("fullImage"),
 	SEARCH("search");
 
 

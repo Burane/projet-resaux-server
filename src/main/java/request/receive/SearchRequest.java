@@ -4,7 +4,7 @@ import BDDconnection.BDDConnection;
 import KeywordsExctractor.KeywordsExtractor;
 import KeywordsExctractor.Langage;
 import request.send.ErrorResponse;
-import request.send.ImageResponse;
+import request.send.PreviewImageResponse;
 import request.send.SearchResponse;
 import server.Client;
 
@@ -91,15 +91,15 @@ public class SearchRequest extends GenericRequest implements GenericRequestInter
 
 			ResultSet resultSet = prepareStatement.executeQuery();
 
-			ArrayList<ImageResponse> imageResponses = new ArrayList<>();
+			ArrayList<PreviewImageResponse> previewImageResponse = new ArrayList<>();
 			while (resultSet.next()) {
 				String titre = resultSet.getString("Titre");
 				int id = resultSet.getInt("Id_Image");
 				byte[] binaryData = resultSet.getBinaryStream("Tiny_Image").readAllBytes();
 				String data = new String(Base64.getEncoder().encode(binaryData));
-				imageResponses.add(new ImageResponse(titre, data, id));
+				previewImageResponse.add(new PreviewImageResponse(titre, data, id));
 			}
-			SearchResponse response = new SearchResponse(imageResponses);
+			SearchResponse response = new SearchResponse(previewImageResponse);
 			client.respond(response);
 
 		} catch (SQLException | IOException throwables) {
