@@ -35,6 +35,7 @@ public class DeleteRequest extends GenericRequest implements GenericRequestInter
 				if (isUserImage) {
 					deleteFromPossede(connection, id);
 					deleteFromUpload(connection, id);
+					deleteFromNote(connection, id);
 					deleteImage(connection, id);
 				} else {
 					client.respond(new ErrorResponse("Image : " + id + " is not your image."));
@@ -86,6 +87,11 @@ public class DeleteRequest extends GenericRequest implements GenericRequestInter
 
 	private void deleteFromPossede(Connection connection, int id) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Possede WHERE Id_Image = ?");
+		preparedStatement.setInt(1, id);
+		preparedStatement.execute();
+	}
+	private void deleteFromNote(Connection connection, int id) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Note WHERE Id_Image = ?");
 		preparedStatement.setInt(1, id);
 		preparedStatement.execute();
 	}
