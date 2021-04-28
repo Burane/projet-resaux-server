@@ -97,25 +97,29 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 	private int insertImage(Connection connection) throws SQLException {
 
 		byte[] binaryImage = Base64.getDecoder().decode(data);
+		String extension = "";
 		try {
-			System.out.println("Image extension : "+ImageUtils.getImageFormat(binaryImage));
+			extension = ImageUtils.getImageFormat(binaryImage);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		System.out.println("before resize : " + binaryImage.length);
 
-		byte[] imageBytes = ImageUtils.resizeImage(binaryImage, 0.5);
-		System.out.println("after resize  : " + imageBytes.length);
+		if (!extension.equals("gif") && !extension.isEmpty()) {
 
-		byte[] imageCompressed = ImageUtils.compressImage(imageBytes,0.05f);
-		System.out.println("compressed    : " + imageCompressed.length);
+			binaryImage = ImageUtils.resizeImage(binaryImage, 0.5);
+			System.out.println("after resize  : " + binaryImage.length);
+
+			binaryImage = ImageUtils.compressImage(binaryImage, 0.5f);
+			System.out.println("compressed    : " + binaryImage.length);
+		}
 
 		PreparedStatement preparedStatement = connection
 				.prepareStatement("INSERT INTO Image (Titre, Full_Image, Tiny_Image) VALUES (?, ?, ?)",
 						Statement.RETURN_GENERATED_KEYS);
 		preparedStatement.setString(1, titre);
 		preparedStatement.setBytes(2, binaryImage);
-		preparedStatement.setBytes(3, imageCompressed);
+		preparedStatement.setBytes(3, binaryImage);
 		preparedStatement.execute();
 
 		ResultSet resultSet = preparedStatement.getGeneratedKeys();
