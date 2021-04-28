@@ -1,15 +1,12 @@
 package request.receive;
 
 import BDDconnection.BDDConnection;
-import net.coobird.thumbnailator.Thumbnails;
+import Utils.ImageUtils;
 import request.send.ErrorResponse;
 import request.send.SuccessResponse;
 import server.Client;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.Base64;
@@ -39,7 +36,6 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 		}
 
 		System.out.println(this);
-
 		Connection connection = BDDConnection.getConnection();
 		Savepoint save = null;
 		try {
@@ -51,7 +47,7 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 
 		try {
 			int imageId = insertImage(connection); // return -1 if error
-
+			System.out.println("insert image : " + imageId);
 			insertUpload(client.getUserId(), connection, imageId);
 
 			for (String tag : tags) {
@@ -61,15 +57,17 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 			client.respond(new SuccessResponse("Image successfully uploaded"));
 
 		} catch (SQLException throwable) {
+			throwable.printStackTrace();
 			client.respond(new ErrorResponse(throwable.getMessage()));
 			try {
 				connection.rollback(save);
 			} catch (SQLException throwables) {
 				throwables.printStackTrace();
 			}
-			throwable.printStackTrace();
 		} finally {
 			try {
+				connection.commit();
+				System.out.println("commited");
 				connection.setAutoCommit(true);
 			} catch (SQLException throwables) {
 				throwables.printStackTrace();
@@ -99,23 +97,25 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 	private int insertImage(Connection connection) throws SQLException {
 
 		byte[] binaryImage = Base64.getDecoder().decode(data);
-		InputStream fullSizeImage = new ByteArrayInputStream(binaryImage);
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		System.out.println("before resize");
 		try {
-			Thumbnails.of(fullSizeImage).scale(0.25).outputQuality(0.25).toOutputStream(out);
+			System.out.println("Image extension : "+ImageUtils.getImageFormat(binaryImage));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		InputStream tinyImage = new ByteArrayInputStream(out.toByteArray());
-		System.out.println("after resize");
+		System.out.println("before resize : " + binaryImage.length);
+
+		byte[] imageBytes = ImageUtils.resizeImage(binaryImage, 0.5);
+		System.out.println("after resize  : " + imageBytes.length);
+
+		byte[] imageCompressed = ImageUtils.compressImage(imageBytes,0.05f);
+		System.out.println("compressed    : " + imageCompressed.length);
 
 		PreparedStatement preparedStatement = connection
 				.prepareStatement("INSERT INTO Image (Titre, Full_Image, Tiny_Image) VALUES (?, ?, ?)",
 						Statement.RETURN_GENERATED_KEYS);
 		preparedStatement.setString(1, titre);
-		preparedStatement.setBinaryStream(2, fullSizeImage);
-		preparedStatement.setBinaryStream(3, tinyImage);
+		preparedStatement.setBytes(2, binaryImage);
+		preparedStatement.setBytes(3, imageCompressed);
 		preparedStatement.execute();
 
 		ResultSet resultSet = preparedStatement.getGeneratedKeys();
@@ -151,4 +151,5 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 		}
 		return tagId;
 	}
+
 }
