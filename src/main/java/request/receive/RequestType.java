@@ -13,7 +13,7 @@ public enum RequestType {
 
 	DELETE("delete"),
 
-	PREVIEWIMAGE("previewImage"),
+	LIKE("like"),
 
 	FULLIMAGE("fullImage");
 

@@ -17,7 +17,8 @@ public abstract class RequestDeserializer {
 				.registerSubtype(SearchRequest.class, RequestType.SEARCH.toString())
 				.registerSubtype(UploadRequest.class, RequestType.UPLOAD.toString())
 				.registerSubtype(DeleteRequest.class, RequestType.DELETE.toString())
-				.registerSubtype(FullImageRequest.class, RequestType.FULLIMAGE.toString());
+				.registerSubtype(FullImageRequest.class, RequestType.FULLIMAGE.toString())
+				.registerSubtype(LikeRequest.class, RequestType.LIKE.toString());
 
 		return new GsonBuilder().registerTypeAdapterFactory(typeAdapterFactory).create();
 	}
