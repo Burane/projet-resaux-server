@@ -17,6 +17,8 @@ public enum RequestType {
 
 	FULLIMAGE("fullImage"),
 
+	SEARCHPERDAY("searchPerDay"),
+
 	MYIMAGESEARCH("myImageSearch");
 
 	private final String field;

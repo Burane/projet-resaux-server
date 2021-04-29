@@ -7,7 +7,9 @@ public enum ResponseType {
 	PREVIEWIMAGE("previewImage"),
 	FULLIMAGE("fullImage"),
 	LIKE("like"),
-	SEARCH("search");
+	SEARCH("search"),
+	SEARCHPERDAY("searchPerDay"),
+	ONESEARCHDAY("oneSearchDay");
 
 
 

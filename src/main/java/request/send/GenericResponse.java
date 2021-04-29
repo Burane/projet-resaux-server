@@ -1,6 +1,10 @@
 package request.send;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import gson.LocalDateAdapter;
+
+import java.time.LocalDate;
 
 public abstract class GenericResponse {
 	private final String type;
@@ -10,7 +14,7 @@ public abstract class GenericResponse {
 	}
 
 	public String toJson() {
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
 		return gson.toJson(this);
 	}
 

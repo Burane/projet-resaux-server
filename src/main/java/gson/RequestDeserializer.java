@@ -6,6 +6,8 @@ import request.receive.GenericRequest;
 import request.receive.RequestType;
 import request.receive.*;
 
+import java.time.LocalDate;
+
 public abstract class RequestDeserializer {
 
 	public static Gson getDeserializer() {
@@ -19,8 +21,11 @@ public abstract class RequestDeserializer {
 				.registerSubtype(DeleteRequest.class, RequestType.DELETE.toString())
 				.registerSubtype(FullImageRequest.class, RequestType.FULLIMAGE.toString())
 				.registerSubtype(MyImageSearchRequest.class, RequestType.MYIMAGESEARCH.toString())
+				.registerSubtype(SearchPerDayRequest.class, RequestType.SEARCHPERDAY.toString())
 				.registerSubtype(LikeRequest.class, RequestType.LIKE.toString());
 
-		return new GsonBuilder().registerTypeAdapterFactory(typeAdapterFactory).create();
+		return new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+				.registerTypeAdapterFactory(typeAdapterFactory).create();
 	}
+
 }
