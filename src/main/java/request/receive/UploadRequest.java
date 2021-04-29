@@ -108,9 +108,11 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 		if (!extension.equals("gif") && !extension.isEmpty()) {
 
 			binaryImage = ImageUtils.resizeImage(binaryImage, 0.5);
+			assert binaryImage != null;
 			System.out.println("after resize  : " + binaryImage.length);
 
 			binaryImage = ImageUtils.compressImage(binaryImage, 0.5f);
+			assert binaryImage != null;
 			System.out.println("compressed    : " + binaryImage.length);
 		}
 

@@ -2,8 +2,6 @@ package gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import request.receive.GenericRequest;
-import request.receive.RequestType;
 import request.receive.*;
 
 import java.time.LocalDate;

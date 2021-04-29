@@ -1,6 +1,5 @@
 package request.send;
 
-import java.time.Instant;
 import java.time.LocalDate;
 
 public class OneSearchDayResponse extends GenericResponse {

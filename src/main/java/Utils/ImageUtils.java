@@ -15,7 +15,7 @@ public abstract class ImageUtils {
 
 	public static byte[] resizeImage(byte[] imageData, double resizePercentage) {
 
-		try (InputStream in = new ByteArrayInputStream(imageData);) {
+		try (InputStream in = new ByteArrayInputStream(imageData)) {
 			BufferedImage fullSize = ImageIO.read(in);
 
 			double newheight_db = fullSize.getHeight() * resizePercentage;
@@ -45,7 +45,7 @@ public abstract class ImageUtils {
 
 	public static byte[] compressImage(byte[] imageData, float compressQuality) {
 
-		try (InputStream in = new ByteArrayInputStream(imageData);) {
+		try (InputStream in = new ByteArrayInputStream(imageData)) {
 			BufferedImage image = ImageIO.read(in);
 
 			ByteArrayOutputStream os = new ByteArrayOutputStream();

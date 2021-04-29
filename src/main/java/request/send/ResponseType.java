@@ -13,7 +13,7 @@ public enum ResponseType {
 
 
 
-	private String field;
+	private final String field;
 
 	ResponseType(String field) {
 		this.field = field;
