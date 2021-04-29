@@ -15,7 +15,9 @@ public enum RequestType {
 
 	LIKE("like"),
 
-	FULLIMAGE("fullImage");
+	FULLIMAGE("fullImage"),
+
+	MYIMAGESEARCH("myImageSearch");
 
 	private final String field;
 
