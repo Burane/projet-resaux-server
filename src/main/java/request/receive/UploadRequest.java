@@ -97,6 +97,7 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 	private int insertImage(Connection connection) throws SQLException {
 
 		byte[] binaryImage = Base64.getDecoder().decode(data);
+		byte[] fullImage = binaryImage.clone();
 		String extension = "";
 		try {
 			extension = ImageUtils.getImageFormat(binaryImage);
@@ -120,7 +121,7 @@ public class UploadRequest extends GenericRequest implements GenericRequestInter
 				.prepareStatement("INSERT INTO Image (Titre, Full_Image, Tiny_Image) VALUES (?, ?, ?)",
 						Statement.RETURN_GENERATED_KEYS);
 		preparedStatement.setString(1, titre);
-		preparedStatement.setBytes(2, binaryImage);
+		preparedStatement.setBytes(2, fullImage);
 		preparedStatement.setBytes(3, binaryImage);
 		preparedStatement.execute();
 
